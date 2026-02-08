@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Preferences from "./Preferences";
 import NavBar from "../components/NavBar";
 
 type RankedLocation = {
@@ -19,10 +18,6 @@ export default function Dashboard() {
   const [userId, setUserId] = useState<string | null>(null);
   const [locations, setLocations] = useState<RankedLocation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [prefs, setPrefs] = useState({
-    cost_index_weight: 0.5,
-    safety_index_weight: 0.5,
-  });
 
   useEffect(() => {
     const id = localStorage.getItem("userId");
@@ -31,26 +26,26 @@ export default function Dashboard() {
       return;
     }
     setUserId(id);
-
-    // fetch preferences
-    fetch(`http://localhost:8000/preferences/${id}`)
-      .then((res) => res.json())
-      .then((data) => setPrefs(data));
   }, [router]);
 
-  // 2️⃣ Fetch locations whenever userId or preferences change
   useEffect(() => {
     if (!userId) return;
 
     setLoading(true);
-    fetch(`http://localhost:8000/score/user/${userId}/ranked`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(prefs),
-    })
+    
+    // Fetch user preferences first
+    fetch(`http://localhost:8000/preferences/${userId}`)
+      .then((res) => res.json())
+      .then((prefs) => {
+        // Then fetch ranked locations with those preferences
+        return fetch(`http://localhost:8000/score/user/${userId}/ranked`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(prefs),
+        });
+      })
       .then((res) => res.json())
       .then((data) => {
-        console.log("API Response:", data);
         setLocations(data);
         setLoading(false);
       })
@@ -58,7 +53,7 @@ export default function Dashboard() {
         console.error("API Error:", err);
         setLoading(false);
       });
-  }, [userId, prefs]);
+  }, [userId]);
 
   if (!userId) return null;
 
@@ -75,10 +70,6 @@ export default function Dashboard() {
               Track and compare your favorite locations
             </p>
           </div>
-
-          {userId && (
-            <Preferences userId={userId} prefs={prefs} setPrefs={setPrefs} />
-          )}
 
           <div className="mt-8">
             {loading && (
