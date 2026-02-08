@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Preferences from "./Preferences";
+import NavBar from "../components/NavBar";
 
 type RankedLocation = {
   location: {
@@ -62,52 +63,71 @@ export default function Dashboard() {
   if (!userId) return null;
 
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-10">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Your relocation dashboard
-        </h1>
+    <>
+      <NavBar />
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50/30 px-6 py-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              Your Relocation Dashboard
+            </h1>
+            <p className="text-gray-600">Track and compare your favorite locations</p>
+          </div>
 
-        {userId && (
-          <Preferences userId={userId} prefs={prefs} setPrefs={setPrefs} />
-        )}
-
-        <div className="mt-8">
-          {loading && (
-            <p className="text-gray-500">Loading your locations...</p>
+          {userId && (
+            <Preferences userId={userId} prefs={prefs} setPrefs={setPrefs} />
           )}
 
-          {!loading && locations.length === 0 && (
-            <div className="bg-white rounded-xl shadow p-6">
-              <p className="text-gray-700">
-                You haven't saved any locations yet.
-              </p>
-            </div>
-          )}
-
-          {!loading && locations.length > 0 && (
-            <div className="space-y-4">
-              {locations.map((item, index) => (
-                <div
-                  key={`${item.location.id}-${index}`}
-                  className="bg-white rounded-xl shadow p-6 flex justify-between items-center"
-                >
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {item.location.name}
-                    </h2>
-                    <p className="text-gray-500">{item.location.country}</p>
-                  </div>
-
-                  <div className="text-2xl font-bold text-indigo-600">
-                    {item.score}
-                  </div>
+          <div className="mt-8">
+            {loading && (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent mb-3"></div>
+                  <p className="text-gray-600">Loading your locations...</p>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
+
+            {!loading && locations.length === 0 && (
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
+                <div className="mb-4 text-4xl">📍</div>
+                <p className="text-gray-700 text-lg">
+                  You haven't saved any locations yet.
+                </p>
+                <p className="text-gray-500 mt-2">Browse locations to get started!</p>
+              </div>
+            )}
+
+            {!loading && locations.length > 0 && (
+              <div className="space-y-4">
+                {locations.map((item, index) => (
+                  <div
+                    key={`${item.location.id}-${index}`}
+                    className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex justify-between items-center hover:shadow-xl transition-all duration-200 hover:scale-[1.01]"
+                  >
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        {item.location.name}
+                      </h2>
+                      <p className="text-gray-500 flex items-center gap-1 mt-1">
+                        <span>📍</span>
+                        {item.location.country}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500 mb-1">Match Score</div>
+                      <div className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        {item.score}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
