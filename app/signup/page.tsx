@@ -57,7 +57,10 @@ export default function Signup() {
           )}
 
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+            <label
+              htmlFor="name"
+              className="block text-gray-700 font-medium mb-2"
+            >
               Name
             </label>
             <input
@@ -72,7 +75,10 @@ export default function Signup() {
           </div>
 
           <div className="mb-6">
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-2"
+            >
               Email Address
             </label>
             <input
