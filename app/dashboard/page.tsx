@@ -71,7 +71,9 @@ export default function Dashboard() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
               Your Relocation Dashboard
             </h1>
-            <p className="text-gray-600">Track and compare your favorite locations</p>
+            <p className="text-gray-600">
+              Track and compare your favorite locations
+            </p>
           </div>
 
           {userId && (
@@ -94,7 +96,9 @@ export default function Dashboard() {
                 <p className="text-gray-700 text-lg">
                   You haven't saved any locations yet.
                 </p>
-                <p className="text-gray-500 mt-2">Browse locations to get started!</p>
+                <p className="text-gray-500 mt-2">
+                  Browse locations to get started!
+                </p>
               </div>
             )}
 
@@ -116,7 +120,9 @@ export default function Dashboard() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-sm text-gray-500 mb-1">Match Score</div>
+                      <div className="text-sm text-gray-500 mb-1">
+                        Match Score
+                      </div>
                       <div className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                         {item.score}
                       </div>

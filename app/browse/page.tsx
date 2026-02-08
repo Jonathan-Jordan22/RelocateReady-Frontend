@@ -74,7 +74,9 @@ export default function Browse() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
               Browse Locations
             </h1>
-            <p className="text-gray-600">Discover cities around the world that match your preferences</p>
+            <p className="text-gray-600">
+              Discover cities around the world that match your preferences
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -85,7 +87,9 @@ export default function Browse() {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{loc.name}</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {loc.name}
+                    </h2>
                     <p className="text-gray-500 flex items-center gap-1 mt-1">
                       <span>📍</span>
                       {loc.country}

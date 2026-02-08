@@ -9,8 +9,8 @@ export default function Home() {
         </h1>
 
         <p className="text-xl text-gray-700 mb-10 leading-relaxed">
-          Discover the best cities to move to based on what matters most to you —
-          cost of living, safety, lifestyle, and more.
+          Discover the best cities to move to based on what matters most to you
+          — cost of living, safety, lifestyle, and more.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

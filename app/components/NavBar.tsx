@@ -55,7 +55,17 @@ export default function NavBar() {
             >
               Preferences
             </Link>
-            <div className="ml-2 pl-2 border-l border-gray-200">
+            <div className="ml-2 pl-2 border-l border-gray-200 flex items-center gap-1">
+              <Link
+                href="/login"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  isActive("/login")
+                    ? "bg-indigo-50 text-indigo-600"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
+                }`}
+              >
+                Login
+              </Link>
               <Link
                 href="/logout"
                 className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
@@ -143,7 +153,18 @@ export default function NavBar() {
             >
               Preferences
             </Link>
-            <div className="pt-2 mt-2 border-t border-gray-200">
+            <div className="pt-2 mt-2 border-t border-gray-200 space-y-1">
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-all ${
+                  isActive("/login")
+                    ? "bg-indigo-50 text-indigo-600"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
+                }`}
+              >
+                Login
+              </Link>
               <Link
                 href="/logout"
                 onClick={() => setMenuOpen(false)}
