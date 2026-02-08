@@ -19,13 +19,17 @@ export default function Browse() {
 
   useEffect(() => {
     const id = localStorage.getItem("userId");
-    if (!id) return;
     setUserId(id);
 
-    fetch("http://localhost:8000/locations") // endpoint returning all locations
+    // Fetch locations regardless of login status
+    fetch("http://localhost:8000/locations")
       .then((res) => res.json())
       .then((data) => {
         setLocations(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching locations:", err);
         setLoading(false);
       });
   }, []);
@@ -95,17 +99,26 @@ export default function Browse() {
                       {loc.country}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleSave(loc.id)}
-                    disabled={savedIds.includes(loc.id)}
-                    className={`px-5 py-2.5 rounded-xl font-semibold transition-all ${
-                      savedIds.includes(loc.id)
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:scale-105"
-                    }`}
-                  >
-                    {savedIds.includes(loc.id) ? "✓ Saved" : "Save"}
-                  </button>
+                  {userId ? (
+                    <button
+                      onClick={() => handleSave(loc.id)}
+                      disabled={savedIds.includes(loc.id)}
+                      className={`px-5 py-2.5 rounded-xl font-semibold transition-all ${
+                        savedIds.includes(loc.id)
+                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                          : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:scale-105"
+                      }`}
+                    >
+                      {savedIds.includes(loc.id) ? "✓ Saved" : "Save"}
+                    </button>
+                  ) : (
+                    <a
+                      href="/login"
+                      className="px-5 py-2.5 rounded-xl font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:scale-105 transition-all"
+                    >
+                      Login to Save
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
