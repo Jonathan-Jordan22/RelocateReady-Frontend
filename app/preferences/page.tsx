@@ -110,7 +110,7 @@ export default function Preferences() {
                       onChange={handleChange}
                       className="absolute top-0 w-full h-3 bg-transparent appearance-none cursor-pointer slider-thumb"
                       style={{
-                        WebkitAppearance: 'none',
+                        WebkitAppearance: "none",
                       }}
                     />
                   </div>
@@ -145,7 +145,7 @@ export default function Preferences() {
                       onChange={handleChange}
                       className="absolute top-0 w-full h-3 bg-transparent appearance-none cursor-pointer slider-thumb"
                       style={{
-                        WebkitAppearance: 'none',
+                        WebkitAppearance: "none",
                       }}
                     />
                   </div>

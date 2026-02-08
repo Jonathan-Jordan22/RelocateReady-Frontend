@@ -1,12 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      setIsLoggedIn(true);
+      // Fetch user name
+      fetch(`http://localhost:8000/users/${userId}`)
+        .then((res) => res.json())
+        .then((data) => setUserName(data.name))
+        .catch(() => setUserName("User"));
+    }
+  }, [pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    setIsLoggedIn(false);
+    setUserName("");
+    setMenuOpen(false);
+    router.push("/");
+  };
 
   const isActive = (path: string) => pathname === path;
 
@@ -55,23 +78,36 @@ export default function NavBar() {
             >
               Preferences
             </Link>
-            <div className="ml-2 pl-2 border-l border-gray-200 flex items-center gap-1">
-              <Link
-                href="/login"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isActive("/login")
-                    ? "bg-indigo-50 text-indigo-600"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
-                }`}
-              >
-                Login
-              </Link>
-              <Link
-                href="/logout"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
-              >
-                Logout
-              </Link>
+            <div className="ml-2 pl-2 border-l border-gray-200 flex items-center gap-2">
+              {isLoggedIn ? (
+                <>
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-50">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-sm font-medium text-gray-900">
+                      {userName}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isActive("/login")
+                      ? "bg-indigo-50 text-indigo-600"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
+                  }`}
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
 
@@ -154,24 +190,36 @@ export default function NavBar() {
               Preferences
             </Link>
             <div className="pt-2 mt-2 border-t border-gray-200 space-y-1">
-              <Link
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-all ${
-                  isActive("/login")
-                    ? "bg-indigo-50 text-indigo-600"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
-                }`}
-              >
-                Login
-              </Link>
-              <Link
-                href="/logout"
-                onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
-              >
-                Logout
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-indigo-50">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold">
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-base font-medium text-gray-900">
+                      {userName}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-all ${
+                    isActive("/login")
+                      ? "bg-indigo-50 text-indigo-600"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
+                  }`}
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

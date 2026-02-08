@@ -32,7 +32,7 @@ export default function Dashboard() {
     if (!userId) return;
 
     setLoading(true);
-    
+
     // Fetch user preferences first
     fetch(`http://localhost:8000/preferences/${userId}`)
       .then((res) => res.json())
