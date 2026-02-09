@@ -1,7 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    setIsLoggedIn(!!userId);
+  }, []);
+
   return (
     <>
       <NavBar />
@@ -20,10 +30,10 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/signup"
+                href={isLoggedIn ? "/dashboard" : "/signup"}
                 className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all inline-block"
               >
-                Get Started Free
+                {isLoggedIn ? "Dashboard" : "Get Started Free"}
               </Link>
 
               <Link
@@ -143,7 +153,7 @@ export default function Home() {
               Join thousands of users making informed relocation decisions
             </p>
             <Link
-              href="/signup"
+              href={isLoggedIn ? "/browse" : "/signup"}
               className="inline-block px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all"
             >
               Start Your Journey
