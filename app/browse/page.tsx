@@ -64,7 +64,19 @@ export default function Browse() {
 
     // Add the saved location ID to state to update UI immediately
     setSavedIds((prev) => [...prev, locationId]);
-    alert("Location saved!");
+  };
+
+  const handleRemove = async (locationId: number) => {
+    if (!userId) return;
+    await fetch(
+      `http://localhost:8000/user-locations/${userId}/${locationId}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    // Remove the location ID from state to update UI immediately
+    setSavedIds((prev) => prev.filter((id) => id !== locationId));
   };
 
   if (loading) return <p className="p-6">Loading locations...</p>;
@@ -100,17 +112,21 @@ export default function Browse() {
                     </p>
                   </div>
                   {userId ? (
-                    <button
-                      onClick={() => handleSave(loc.id)}
-                      disabled={savedIds.includes(loc.id)}
-                      className={`px-5 py-2.5 rounded-xl font-semibold transition-all ${
-                        savedIds.includes(loc.id)
-                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:scale-105"
-                      }`}
-                    >
-                      {savedIds.includes(loc.id) ? "✓ Saved" : "Save"}
-                    </button>
+                    savedIds.includes(loc.id) ? (
+                      <button
+                        onClick={() => handleRemove(loc.id)}
+                        className="px-5 py-2.5 rounded-xl font-semibold transition-all bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 hover:shadow-lg hover:scale-105 cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleSave(loc.id)}
+                        className="px-5 py-2.5 rounded-xl font-semibold transition-all bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:scale-105 cursor-pointer"
+                      >
+                        Save
+                      </button>
+                    )
                   ) : (
                     <a
                       href="/login"

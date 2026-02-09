@@ -8,8 +8,10 @@ export default function Preferences() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
   const [prefs, setPrefs] = useState({
-    cost_index_weight: 0.5,
-    safety_index_weight: 0.5,
+    cost_importance: 0.5,
+    safety_importance: 0.5,
+    climate_importance: 0.5,
+    healthcare_importance: 0.5,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -26,7 +28,12 @@ export default function Preferences() {
     fetch(`http://localhost:8000/preferences/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        setPrefs(data);
+        setPrefs({
+          cost_importance: data.cost_importance ?? 0.5,
+          safety_importance: data.safety_importance ?? 0.5,
+          climate_importance: data.climate_importance ?? 0.5,
+          healthcare_importance: data.healthcare_importance ?? 0.5,
+        });
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -47,9 +54,8 @@ export default function Preferences() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(prefs),
       });
-      alert("Preferences saved successfully!");
     } catch (err) {
-      alert("Failed to save preferences. Please try again.");
+      console.error("Error saving preferences:", err);
     } finally {
       setSaving(false);
     }
@@ -90,14 +96,14 @@ export default function Preferences() {
                       Cost of Living
                     </label>
                     <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-300">
-                      {(prefs.cost_index_weight * 100).toFixed(0)}%
+                      {(prefs.cost_importance * 100).toFixed(0)}%
                     </span>
                   </div>
                   <div className="relative">
                     <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300 ease-out rounded-full"
-                        style={{ width: `${prefs.cost_index_weight * 100}%` }}
+                        style={{ width: `${prefs.cost_importance * 100}%` }}
                       ></div>
                     </div>
                     <input
@@ -105,8 +111,8 @@ export default function Preferences() {
                       min="0"
                       max="1"
                       step="0.1"
-                      name="cost_index_weight"
-                      value={prefs.cost_index_weight}
+                      name="cost_importance"
+                      value={prefs.cost_importance}
                       onChange={handleChange}
                       className="absolute top-0 w-full h-3 bg-transparent appearance-none cursor-pointer slider-thumb"
                       style={{
@@ -125,14 +131,14 @@ export default function Preferences() {
                       Safety
                     </label>
                     <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-300">
-                      {(prefs.safety_index_weight * 100).toFixed(0)}%
+                      {(prefs.safety_importance * 100).toFixed(0)}%
                     </span>
                   </div>
                   <div className="relative">
                     <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300 ease-out rounded-full"
-                        style={{ width: `${prefs.safety_index_weight * 100}%` }}
+                        style={{ width: `${prefs.safety_importance * 100}%` }}
                       ></div>
                     </div>
                     <input
@@ -140,8 +146,8 @@ export default function Preferences() {
                       min="0"
                       max="1"
                       step="0.1"
-                      name="safety_index_weight"
-                      value={prefs.safety_index_weight}
+                      name="safety_importance"
+                      value={prefs.safety_importance}
                       onChange={handleChange}
                       className="absolute top-0 w-full h-3 bg-transparent appearance-none cursor-pointer slider-thumb"
                       style={{
@@ -151,6 +157,78 @@ export default function Preferences() {
                   </div>
                   <p className="text-sm text-gray-500 mt-2">
                     How important is safety in your decision?
+                  </p>
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <label className="text-lg font-semibold text-gray-900">
+                      Climate
+                    </label>
+                    <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-300">
+                      {(prefs.climate_importance * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300 ease-out rounded-full"
+                        style={{ width: `${prefs.climate_importance * 100}%` }}
+                      ></div>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      name="climate_importance"
+                      value={prefs.climate_importance}
+                      onChange={handleChange}
+                      className="absolute top-0 w-full h-3 bg-transparent appearance-none cursor-pointer slider-thumb"
+                      style={{
+                        WebkitAppearance: "none",
+                      }}
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    How much does climate quality matter to you?
+                  </p>
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <label className="text-lg font-semibold text-gray-900">
+                      Healthcare
+                    </label>
+                    <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-300">
+                      {(prefs.healthcare_importance * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300 ease-out rounded-full"
+                        style={{
+                          width: `${prefs.healthcare_importance * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      name="healthcare_importance"
+                      value={prefs.healthcare_importance}
+                      onChange={handleChange}
+                      className="absolute top-0 w-full h-3 bg-transparent appearance-none cursor-pointer slider-thumb"
+                      style={{
+                        WebkitAppearance: "none",
+                      }}
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    How important is healthcare quality in your decision?
                   </p>
                 </div>
               </div>
@@ -193,7 +271,7 @@ export default function Preferences() {
               <button
                 type="submit"
                 disabled={saving}
-                className="mt-8 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="mt-8 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
               >
                 {saving ? (
                   <span className="flex items-center justify-center gap-2">

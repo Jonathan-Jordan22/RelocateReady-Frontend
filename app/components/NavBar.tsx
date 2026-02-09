@@ -79,7 +79,7 @@ export default function NavBar() {
               Preferences
             </Link>
             <div className="ml-2 pl-2 border-l border-gray-200 flex items-center gap-2">
-              {isLoggedIn ? (
+              {isLoggedIn && userName ? (
                 <>
                   <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-50">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
@@ -91,7 +91,7 @@ export default function NavBar() {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer"
                   >
                     Logout
                   </button>
@@ -115,7 +115,7 @@ export default function NavBar() {
           <div className="flex items-center md:hidden">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 transition-all"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 transition-all cursor-pointer"
             >
               <span className="sr-only">Open main menu</span>
               {menuOpen ? (
@@ -190,7 +190,7 @@ export default function NavBar() {
               Preferences
             </Link>
             <div className="pt-2 mt-2 border-t border-gray-200 space-y-1">
-              {isLoggedIn ? (
+              {isLoggedIn && userName ? (
                 <>
                   <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-indigo-50">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold">
@@ -202,7 +202,7 @@ export default function NavBar() {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
+                    className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer"
                   >
                     Logout
                   </button>
