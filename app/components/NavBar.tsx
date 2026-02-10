@@ -81,14 +81,17 @@ export default function NavBar() {
             <div className="ml-2 pl-2 border-l border-gray-200 flex items-center gap-2">
               {isLoggedIn && userName ? (
                 <>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-50">
+                  <Link
+                    href="/settings"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition-all cursor-pointer"
+                  >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
                       {userName.charAt(0).toUpperCase()}
                     </div>
                     <span className="text-sm font-medium text-gray-900">
                       {userName}
                     </span>
-                  </div>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer"
@@ -192,14 +195,18 @@ export default function NavBar() {
             <div className="pt-2 mt-2 border-t border-gray-200 space-y-1">
               {isLoggedIn && userName ? (
                 <>
-                  <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-indigo-50">
+                  <Link
+                    href="/settings"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition-all cursor-pointer"
+                  >
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold">
                       {userName.charAt(0).toUpperCase()}
                     </div>
                     <span className="text-base font-medium text-gray-900">
                       {userName}
                     </span>
-                  </div>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left block px-4 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer"
