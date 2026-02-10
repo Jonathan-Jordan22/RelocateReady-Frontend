@@ -14,6 +14,8 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const id = localStorage.getItem("userId");
@@ -68,6 +70,29 @@ export default function Settings() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    setError("");
+
+    try {
+      const response = await fetch(`http://localhost:8000/users/${userId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete account");
+      }
+
+      // Clear localStorage and redirect to home
+      localStorage.removeItem("userId");
+      router.push("/");
+    } catch (err) {
+      setError("Failed to delete account. Please try again.");
+      setShowDeleteModal(false);
+      setDeleting(false);
+    }
+  };
+
   if (!userId) return null;
 
   return (
@@ -81,7 +106,6 @@ export default function Settings() {
             </h1>
             <p className="text-gray-600">Manage your account information</p>
           </div>
-
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
@@ -174,6 +198,54 @@ export default function Settings() {
                 )}
               </button>
             </form>
+          )}
+          {!loading && (
+            <div className="mt-8 bg-white rounded-2xl shadow-lg border border-red-200 p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Danger Zone
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Once you delete your account, there is no going back. Please be
+                certain.
+              </p>
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 hover:shadow-lg hover:scale-105 transition-all cursor-pointer"
+              >
+                Delete Account
+              </button>
+            </div>
+          )}
+          {/* Delete Confirmation Modal */}
+          {showDeleteModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Delete Account?
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Are you sure you want to delete your account? This action
+                  cannot be undone. All your data, preferences, and saved
+                  locations will be permanently deleted.
+                </p>
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    disabled={deleting}
+                    className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deleting}
+                    className="flex-1 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {deleting ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </main>

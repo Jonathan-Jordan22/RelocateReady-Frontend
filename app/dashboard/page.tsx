@@ -66,8 +66,8 @@ export default function Dashboard() {
 
         // Check if preferences are set (not all default values)
         const isDefaultPrefs =
-          prefs.cost_importance === 0.5 &&
-          prefs.safety_importance === 0.5 &&
+          prefs.cost_importance === 0.0 &&
+          prefs.safety_importance === 0.0 &&
           prefs.climate_importance === 0.0 &&
           prefs.healthcare_importance === 0.0;
 
