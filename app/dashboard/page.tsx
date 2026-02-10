@@ -35,14 +35,18 @@ export default function Dashboard() {
     setLoading(true);
 
     // Fetch user preferences first
-    fetch(`http://localhost:8000/preferences/${userId}`)
+    fetch(
+      `https://relocateready-production.up.railway.app/preferences/${userId}`,
+    )
       .then((res) => {
         if (!res.ok) {
           // If preferences don't exist (404), user needs to set them
           setHasPreferences(false);
           setLoading(false);
           // Fetch locations anyway
-          return fetch(`http://localhost:8000/user-locations/${userId}`)
+          return fetch(
+            `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+          )
             .then((r) => r.json())
             .then((data) => {
               if (Array.isArray(data)) {
@@ -74,7 +78,9 @@ export default function Dashboard() {
         setHasPreferences(!isDefaultPrefs);
 
         // Then fetch user's saved locations
-        return fetch(`http://localhost:8000/user-locations/${userId}`);
+        return fetch(
+          `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+        );
       })
       .then((res) => {
         if (!res) return; // Already handled above

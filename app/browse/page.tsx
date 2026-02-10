@@ -26,7 +26,7 @@ export default function Browse() {
     setUserId(id);
 
     // Fetch locations regardless of login status
-    fetch("http://localhost:8000/locations")
+    fetch("https://relocateready-production.up.railway.app/locations/")
       .then((res) => res.json())
       .then((data) => {
         setLocations(data);
@@ -41,7 +41,9 @@ export default function Browse() {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`http://localhost:8000/user-locations/${userId}`)
+    fetch(
+      `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+    )
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -60,7 +62,7 @@ export default function Browse() {
   const handleSave = async (locationId: number) => {
     if (!userId) return;
     await fetch(
-      `http://localhost:8000/user-locations/${userId}/${locationId}`,
+      `https://relocateready-production.up.railway.app/user-locations/${userId}/${locationId}`,
       {
         method: "POST",
       },
@@ -73,7 +75,7 @@ export default function Browse() {
   const handleRemove = async (locationId: number) => {
     if (!userId) return;
     await fetch(
-      `http://localhost:8000/user-locations/${userId}/${locationId}`,
+      `https://relocateready-production.up.railway.app/user-locations/${userId}/${locationId}`,
       {
         method: "DELETE",
       },

@@ -16,7 +16,7 @@ export default function NavBar() {
     if (userId) {
       setIsLoggedIn(true);
       // Fetch user name
-      fetch(`http://localhost:8000/users/${userId}`)
+      fetch(`https://relocateready-production.up.railway.app/users/${userId}`)
         .then((res) => res.json())
         .then((data) => setUserName(`${data.first_name} ${data.last_name}`))
         .catch(() => setUserName("User"));

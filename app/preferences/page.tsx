@@ -49,11 +49,14 @@ export default function Preferences() {
     setSaving(true);
 
     try {
-      await fetch(`http://localhost:8000/preferences/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prefs),
-      });
+      await fetch(
+        `https://relocateready-production.up.railway.app/preferences/${userId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(prefs),
+        },
+      );
     } catch (err) {
       console.error("Error saving preferences:", err);
     } finally {

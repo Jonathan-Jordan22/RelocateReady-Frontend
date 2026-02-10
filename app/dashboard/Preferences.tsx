@@ -9,28 +9,41 @@ export default function Preferences({
 }: {
   userId: string;
   prefs: { cost_index_weight: number; safety_index_weight: number };
-  setPrefs: React.Dispatch<React.SetStateAction<{ cost_index_weight: number; safety_index_weight: number }>>;
+  setPrefs: React.Dispatch<
+    React.SetStateAction<{
+      cost_index_weight: number;
+      safety_index_weight: number;
+    }>
+  >;
 }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPrefs(prev => ({ ...prev, [name]: parseFloat(value) }));
+    setPrefs((prev) => ({ ...prev, [name]: parseFloat(value) }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch(`http://localhost:8000/preferences/${userId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(prefs),
-    });
+    await fetch(
+      `https://relocateready-production.up.railway.app/preferences/${userId}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(prefs),
+      },
+    );
     alert("Preferences updated!");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow mb-6">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 rounded-xl shadow mb-6"
+    >
       <h2 className="text-xl font-bold mb-4">Update Preferences</h2>
 
-      <label className="block mb-2">Cost Importance: {prefs.cost_index_weight}</label>
+      <label className="block mb-2">
+        Cost Importance: {prefs.cost_index_weight}
+      </label>
       <input
         type="range"
         min="0"
@@ -42,7 +55,9 @@ export default function Preferences({
         className="w-full mb-4"
       />
 
-      <label className="block mb-2">Safety Importance: {prefs.safety_index_weight}</label>
+      <label className="block mb-2">
+        Safety Importance: {prefs.safety_index_weight}
+      </label>
       <input
         type="range"
         min="0"

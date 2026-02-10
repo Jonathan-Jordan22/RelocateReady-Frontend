@@ -18,16 +18,19 @@ export default function Signup() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8000/users/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          password,
-        }),
-      });
+      const res = await fetch(
+        "https://relocateready-production.up.railway.app/users/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password,
+          }),
+        },
+      );
 
       if (!res.ok) throw new Error("Failed to create user");
 

@@ -26,7 +26,7 @@ export default function Settings() {
     setUserId(id);
 
     // Fetch user data
-    fetch(`http://localhost:8000/users/${id}`)
+    fetch(`https://relocateready-production.up.railway.app/users/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setFirstName(data.first_name);
@@ -47,15 +47,18 @@ export default function Settings() {
     setSuccess("");
 
     try {
-      const response = await fetch(`http://localhost:8000/users/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-        }),
-      });
+      const response = await fetch(
+        `https://relocateready-production.up.railway.app/users/${userId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+          }),
+        },
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update user data");
@@ -75,9 +78,12 @@ export default function Settings() {
     setError("");
 
     try {
-      const response = await fetch(`http://localhost:8000/users/${userId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://relocateready-production.up.railway.app/users/${userId}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete account");
