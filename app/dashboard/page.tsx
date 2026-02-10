@@ -34,18 +34,31 @@ export default function Dashboard() {
 
     setLoading(true);
 
-    // Fetch user preferences first
+    let savedLocationIds: number[] = [];
+
+    // First fetch saved location IDs
     fetch(
-      `https://relocateready-production.up.railway.app/preferences/${userId}`,
+      `https://relocateready-production.up.railway.app/user-locations/${userId}`,
     )
+      .then((res) => res.json())
+      .then((savedLocs) => {
+        if (Array.isArray(savedLocs)) {
+          savedLocationIds = savedLocs.map((loc: any) => loc.id);
+        }
+        // Then fetch user preferences
+        return fetch(
+          `https://relocateready-production.up.railway.app/preferences/${userId}`,
+        );
+      })
       .then((res) => {
         if (!res.ok) {
           // If preferences don't exist (404), user needs to set them
           setHasPreferences(false);
           setLoading(false);
-          // Fetch locations anyway
+          // Fetch ranked locations anyway
           return fetch(
-            `https://relocateready-production.up.railway.app/user/${userId}/ranked`,
+            `https://relocateready-production.up.railway.app/score/user/${userId}/ranked`,
+            { method: "POST" },
           )
             .then((r) => r.json())
             .then((data) => {
@@ -71,7 +84,8 @@ export default function Dashboard() {
 
         // Then fetch user's ranked locations
         return fetch(
-          `https://relocateready-production.up.railway.app/user/${userId}/ranked`,
+          `https://relocateready-production.up.railway.app/score/user/${userId}/ranked`,
+          { method: "POST" },
         );
       })
       .then((res) => {
