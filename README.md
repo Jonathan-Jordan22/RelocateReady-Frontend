@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RelocateReady
+
+A modern web application that helps users discover their ideal relocation destination based on personalized preferences. Built with Next.js and powered by intelligent location scoring algorithms.
+
+## Overview
+
+RelocateReady provides a data-driven approach to relocation planning by analyzing multiple factors including cost of living, safety, climate, and healthcare. Users can customize their preferences and receive personalized location recommendations with match scores.
+
+## Features
+
+- **Personalized Preferences**: Customize importance weights for cost, safety, climate, and healthcare factors
+- **Location Browsing**: Explore cities worldwide with detailed descriptions and statistics
+- **Smart Matching**: AI-powered scoring system ranks locations based on your preferences
+- **User Dashboard**: Track and compare saved locations with real-time match scores
+- **Account Management**: Secure authentication with profile and preference management
+
+## Tech Stack
+
+- **Framework**: Next.js 16.1.6 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Backend**: FastAPI (deployed on Railway)
+- **State Management**: React Hooks
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/relocateready-frontend.git
+cd relocateready-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+├── browse/          # Location discovery and browsing
+├── dashboard/       # Personalized user dashboard
+├── preferences/     # Preference configuration
+├── settings/        # Account settings
+├── login/          # Authentication
+├── signup/         # User registration
+└── components/     # Shared UI components
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Integration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The frontend integrates with a FastAPI backend deployed on Railway that provides:
+- User authentication and management
+- Location data and descriptions
+- Preference storage and retrieval
+- Dynamic location scoring based on user preferences
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is licensed under the MIT License.
+
+## Contact
+
+For questions or feedback, please open an issue on GitHub.
