@@ -25,7 +25,7 @@ export default function Preferences() {
     setUserId(id);
 
     // Fetch preferences
-    fetch(`http://localhost:8000/preferences/${id}`)
+    fetch(`https://relocateready-production.up.railway.app/preferences/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setPrefs({
@@ -52,7 +52,7 @@ export default function Preferences() {
       await fetch(
         `https://relocateready-production.up.railway.app/preferences/${userId}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(prefs),
         },
