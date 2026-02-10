@@ -52,7 +52,7 @@ export default function Preferences() {
       await fetch(
         `https://relocateready-production.up.railway.app/preferences/${userId}`,
         {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(prefs),
         },
