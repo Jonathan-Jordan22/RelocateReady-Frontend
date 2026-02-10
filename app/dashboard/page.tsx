@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [userId, setUserId] = useState<string | null>(null);
   const [locations, setLocations] = useState<RankedLocation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasPreferences, setHasPreferences] = useState(false);
 
   useEffect(() => {
     const id = localStorage.getItem("userId");
@@ -35,22 +36,70 @@ export default function Dashboard() {
 
     // Fetch user preferences first
     fetch(`http://localhost:8000/preferences/${userId}`)
-      .then((res) => res.json())
-      .then((prefs) => {
-        // Then fetch ranked locations with those preferences
-        return fetch(`http://localhost:8000/score/user/${userId}/ranked`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(prefs),
-        });
+      .then((res) => {
+        if (!res.ok) {
+          // If preferences don't exist (404), user needs to set them
+          setHasPreferences(false);
+          setLoading(false);
+          // Fetch locations anyway
+          return fetch(`http://localhost:8000/user-locations/${userId}`)
+            .then((r) => r.json())
+            .then((data) => {
+              if (Array.isArray(data)) {
+                const rankedLocations = data.map((loc) => ({
+                  location: {
+                    id: loc.id,
+                    name: loc.name,
+                    country: loc.country,
+                  },
+                  score: 0,
+                }));
+                setLocations(rankedLocations);
+              }
+            })
+            .catch(() => setLocations([]));
+        }
+        return res.json();
       })
-      .then((res) => res.json())
+      .then((prefs) => {
+        if (!prefs) return; // Already handled 404 above
+
+        // Check if preferences are set (not all default values)
+        const isDefaultPrefs =
+          prefs.cost_importance === 0.5 &&
+          prefs.safety_importance === 0.5 &&
+          prefs.climate_importance === 0.0 &&
+          prefs.healthcare_importance === 0.0;
+
+        setHasPreferences(!isDefaultPrefs);
+
+        // Then fetch user's saved locations
+        return fetch(`http://localhost:8000/user-locations/${userId}`);
+      })
+      .then((res) => {
+        if (!res) return; // Already handled above
+        if (!res.ok) throw new Error("Failed to fetch locations");
+        return res.json();
+      })
       .then((data) => {
-        setLocations(data);
+        if (!data) return; // Already handled above
+        if (Array.isArray(data)) {
+          // Transform saved locations into the expected format
+          const rankedLocations = data.map((loc) => ({
+            location: {
+              id: loc.id,
+              name: loc.name,
+              country: loc.country,
+            },
+            score: 0, // You can calculate score on frontend or wait for backend endpoint
+          }));
+          setLocations(rankedLocations);
+        }
         setLoading(false);
       })
       .catch((err) => {
         console.error("API Error:", err);
+        setLocations([]);
         setLoading(false);
       });
   }, [userId]);
@@ -62,6 +111,28 @@ export default function Dashboard() {
       <NavBar />
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50/30 px-6 py-10">
         <div className="max-w-5xl mx-auto">
+          {!loading && !hasPreferences && (
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl p-6 mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    ⚙️ Set Your Preferences
+                  </h3>
+                  <p className="text-gray-600">
+                    Customize what matters most to you to get personalized
+                    location recommendations
+                  </p>
+                </div>
+                <button
+                  onClick={() => router.push("/preferences")}
+                  className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all cursor-pointer whitespace-nowrap ml-4"
+                >
+                  Update Preferences
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
               Your Relocation Dashboard

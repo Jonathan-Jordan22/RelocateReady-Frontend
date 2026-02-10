@@ -18,7 +18,7 @@ export default function NavBar() {
       // Fetch user name
       fetch(`http://localhost:8000/users/${userId}`)
         .then((res) => res.json())
-        .then((data) => setUserName(data.name))
+        .then((data) => setUserName(`${data.first_name} ${data.last_name}`))
         .catch(() => setUserName("User"));
     }
   }, [pathname]);

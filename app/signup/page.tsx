@@ -7,8 +7,10 @@ import NavBar from "../components/NavBar";
 
 export default function Signup() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,7 +21,12 @@ export default function Signup() {
       const res = await fetch("http://localhost:8000/users/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password,
+        }),
       });
 
       if (!res.ok) throw new Error("Failed to create user");
@@ -58,19 +65,37 @@ export default function Signup() {
 
           <div className="mb-4">
             <label
-              htmlFor="name"
+              htmlFor="firstName"
               className="block text-gray-700 font-medium mb-2"
             >
-              Name
+              First Name
             </label>
             <input
-              id="name"
+              id="firstName"
               type="text"
               required
-              placeholder="Your name"
+              placeholder="John"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-gray-900"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="lastName"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Last Name
+            </label>
+            <input
+              id="lastName"
+              type="text"
+              required
+              placeholder="Doe"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-gray-900"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
 
@@ -89,6 +114,24 @@ export default function Signup() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-gray-900"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              placeholder="••••••••"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-gray-900"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
