@@ -45,20 +45,12 @@ export default function Dashboard() {
           setLoading(false);
           // Fetch locations anyway
           return fetch(
-            `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+            `https://relocateready-production.up.railway.app/user/${userId}/ranked`,
           )
             .then((r) => r.json())
             .then((data) => {
               if (Array.isArray(data)) {
-                const rankedLocations = data.map((loc) => ({
-                  location: {
-                    id: loc.id,
-                    name: loc.name,
-                    country: loc.country,
-                  },
-                  score: 0,
-                }));
-                setLocations(rankedLocations);
+                setLocations(data);
               }
             })
             .catch(() => setLocations([]));
@@ -77,9 +69,9 @@ export default function Dashboard() {
 
         setHasPreferences(!isDefaultPrefs);
 
-        // Then fetch user's saved locations
+        // Then fetch user's ranked locations
         return fetch(
-          `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+          `https://relocateready-production.up.railway.app/user/${userId}/ranked`,
         );
       })
       .then((res) => {
@@ -90,16 +82,7 @@ export default function Dashboard() {
       .then((data) => {
         if (!data) return; // Already handled above
         if (Array.isArray(data)) {
-          // Transform saved locations into the expected format
-          const rankedLocations = data.map((loc) => ({
-            location: {
-              id: loc.id,
-              name: loc.name,
-              country: loc.country,
-            },
-            score: 0, // You can calculate score on frontend or wait for backend endpoint
-          }));
-          setLocations(rankedLocations);
+          setLocations(data);
         }
         setLoading(false);
       })
