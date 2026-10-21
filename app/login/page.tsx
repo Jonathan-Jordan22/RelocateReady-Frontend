@@ -19,7 +19,7 @@ export default function Login() {
 
     try {
       const res = await fetch(
-        "https://relocateready-production.up.railway.app/login",
+        "https://relocateready-production.up.railway.app/users/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
