@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -16,7 +17,7 @@ export default function NavBar() {
     if (userId) {
       setIsLoggedIn(true);
       // Fetch user name
-      fetch(`https://relocateready-production.up.railway.app/users/${userId}`)
+      fetch(`${API_URL}/users/${userId}`)
         .then((res) => res.json())
         .then((data) => setUserName(`${data.first_name} ${data.last_name}`))
         .catch(() => setUserName("User"));

@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ export default function Login() {
 
     try {
       const res = await fetch(
-        "https://relocateready-production.up.railway.app/users/login",
+        `${API_URL}/users/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

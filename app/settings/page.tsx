@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,7 @@ export default function Settings() {
     setUserId(id);
 
     // Fetch user data
-    fetch(`https://relocateready-production.up.railway.app/users/${id}`)
+    fetch(`${API_URL}/users/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setFirstName(data.first_name);
@@ -48,7 +49,7 @@ export default function Settings() {
 
     try {
       const response = await fetch(
-        `https://relocateready-production.up.railway.app/users/${userId}`,
+        `${API_URL}/users/${userId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -79,7 +80,7 @@ export default function Settings() {
 
     try {
       const response = await fetch(
-        `https://relocateready-production.up.railway.app/users/${userId}`,
+        `${API_URL}/users/${userId}`,
         {
           method: "DELETE",
         },

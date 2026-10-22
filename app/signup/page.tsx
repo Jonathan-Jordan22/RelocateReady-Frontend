@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ export default function Signup() {
 
     try {
       const res = await fetch(
-        "https://relocateready-production.up.railway.app/users/",
+        `${API_URL}/users/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -41,6 +42,7 @@ export default function Signup() {
 
       router.push("/dashboard");
     } catch (err) {
+      console.error("Signup failed:", err);
       setError("Something went wrong. Please try again.");
     }
   };

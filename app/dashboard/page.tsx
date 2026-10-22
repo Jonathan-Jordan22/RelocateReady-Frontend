@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -38,7 +39,7 @@ export default function Dashboard() {
 
     // First fetch saved location IDs
     fetch(
-      `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+      `${API_URL}/user-locations/${userId}`,
     )
       .then((res) => res.json())
       .then((savedLocs) => {
@@ -47,7 +48,7 @@ export default function Dashboard() {
         }
         // Then fetch user preferences
         return fetch(
-          `https://relocateready-production.up.railway.app/preferences/${userId}`,
+          `${API_URL}/preferences/${userId}`,
         );
       })
       .then((res) => {
@@ -57,7 +58,7 @@ export default function Dashboard() {
           setLoading(false);
           // Fetch ranked locations anyway
           return fetch(
-            `https://relocateready-production.up.railway.app/score/user/${userId}/ranked`,
+            `${API_URL}/score/user/${userId}/ranked`,
             { method: "POST" },
           )
             .then((r) => r.json())
@@ -84,7 +85,7 @@ export default function Dashboard() {
 
         // Then fetch user's ranked locations
         return fetch(
-          `https://relocateready-production.up.railway.app/score/user/${userId}/ranked`,
+          `${API_URL}/score/user/${userId}/ranked`,
           { method: "POST" },
         );
       })
