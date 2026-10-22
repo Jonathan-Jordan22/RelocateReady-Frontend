@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
@@ -26,7 +27,7 @@ export default function Browse() {
     setUserId(id);
 
     // Fetch locations regardless of login status
-    fetch("https://relocateready-production.up.railway.app/locations/")
+    fetch(`${API_URL}/locations/`)
       .then((res) => res.json())
       .then((data) => {
         setLocations(data);
@@ -42,7 +43,7 @@ export default function Browse() {
     if (!userId) return;
 
     fetch(
-      `https://relocateready-production.up.railway.app/user-locations/${userId}`,
+      `${API_URL}/user-locations/${userId}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -62,7 +63,7 @@ export default function Browse() {
   const handleSave = async (locationId: number) => {
     if (!userId) return;
     await fetch(
-      `https://relocateready-production.up.railway.app/user-locations/${userId}/${locationId}`,
+      `${API_URL}/user-locations/${userId}/${locationId}`,
       {
         method: "POST",
       },
@@ -75,7 +76,7 @@ export default function Browse() {
   const handleRemove = async (locationId: number) => {
     if (!userId) return;
     await fetch(
-      `https://relocateready-production.up.railway.app/user-locations/${userId}/${locationId}`,
+      `${API_URL}/user-locations/${userId}/${locationId}`,
       {
         method: "DELETE",
       },

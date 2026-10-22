@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 
@@ -24,7 +25,7 @@ export default function Preferences({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await fetch(
-      `https://relocateready-production.up.railway.app/preferences/${userId}`,
+      `${API_URL}/preferences/${userId}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

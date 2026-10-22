@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,7 +26,7 @@ export default function Preferences() {
     setUserId(id);
 
     // Fetch preferences
-    fetch(`https://relocateready-production.up.railway.app/preferences/${id}`)
+    fetch(`${API_URL}/preferences/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setPrefs({
@@ -50,7 +51,7 @@ export default function Preferences() {
 
     try {
       await fetch(
-        `https://relocateready-production.up.railway.app/preferences/${userId}`,
+        `${API_URL}/preferences/${userId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
