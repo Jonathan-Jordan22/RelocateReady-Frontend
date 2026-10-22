@@ -6,6 +6,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 
+const PASSWORD_RULES = [
+  { label: "At least 8 characters", test: (pw: string) => pw.length >= 8 },
+  { label: "Contains a number", test: (pw: string) => /\d/.test(pw) },
+  {
+    label: "Contains a special character",
+    test: (pw: string) => /[!@#$%^&*(),.?":{}|<>]/.test(pw),
+  },
+];
+
 export default function Signup() {
   const router = useRouter();
   const [firstName, setFirstName] = useState("");
@@ -13,6 +22,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const passwordValid = PASSWORD_RULES.every((rule) => rule.test(password));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +43,20 @@ export default function Signup() {
         },
       );
 
-      if (!res.ok) throw new Error("Failed to create user");
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        const detail = body?.detail;
+
+        let message = "Something went wrong. Please try again.";
+        if (Array.isArray(detail)) {
+          message = detail
+            .map((d: { msg: string }) => d.msg.replace(/^Value error, /, ""))
+            .join(" ");
+        } else if (typeof detail === "string") {
+          message = detail;
+        }
+        throw new Error(message);
+      }
 
       const data = await res.json();
 
@@ -43,7 +66,7 @@ export default function Signup() {
       router.push("/dashboard");
     } catch (err) {
       console.error("Signup failed:", err);
-      setError("Something went wrong. Please try again.");
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     }
   };
 
@@ -137,12 +160,30 @@ export default function Signup() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-gray-900"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              aria-describedby="password-rules"
             />
+            <ul id="password-rules" className="mt-2 space-y-1">
+              {PASSWORD_RULES.map((rule) => {
+                const passed = rule.test(password);
+                return (
+                  <li
+                    key={rule.label}
+                    className={`flex items-center gap-2 text-sm transition-colors ${passed ? "text-green-600" : "text-gray-500"
+                      }`}
+                  >
+                    <span aria-hidden="true">{passed ? "✓" : "○"}</span>
+                    {rule.label}
+                    <span className="sr-only">{passed ? "(met)" : "(not met)"}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all cursor-pointer"
+            className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={!passwordValid}
           >
             Continue
           </button>
