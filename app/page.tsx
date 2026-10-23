@@ -1,5 +1,7 @@
 "use client";
 
+import { getToken } from "./lib/api";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
@@ -8,8 +10,8 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    setIsLoggedIn(!!userId);
+    const token = getToken();
+    setIsLoggedIn(!!token);
   }, []);
 
   return (

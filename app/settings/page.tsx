@@ -1,5 +1,5 @@
 "use client";
-import { API_URL } from "@/app/lib/api";
+import { API_URL, getToken, clearToken, apiFetch } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,7 @@ import NavBar from "../components/NavBar";
 
 export default function Settings() {
   const router = useRouter();
-  const [userId, setUserId] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,15 +19,15 @@ export default function Settings() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const id = localStorage.getItem("userId");
+    const id = getToken();
     if (!id) {
       router.push("/login");
       return;
     }
-    setUserId(id);
+    setAuthToken(id);
 
     // Fetch user data
-    fetch(`${API_URL}/users/${id}`)
+    apiFetch("/users/me")
       .then((res) => res.json())
       .then((data) => {
         setFirstName(data.first_name);
@@ -48,8 +48,7 @@ export default function Settings() {
     setSuccess("");
 
     try {
-      const response = await fetch(
-        `${API_URL}/users/${userId}`,
+      const response = await apiFetch("/users/me",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -79,8 +78,7 @@ export default function Settings() {
     setError("");
 
     try {
-      const response = await fetch(
-        `${API_URL}/users/${userId}`,
+      const response = await apiFetch("/users/me",
         {
           method: "DELETE",
         },
@@ -90,8 +88,7 @@ export default function Settings() {
         throw new Error("Failed to delete account");
       }
 
-      // Clear localStorage and redirect to home
-      localStorage.removeItem("userId");
+      clearToken();
       router.push("/");
     } catch (err) {
       setError("Failed to delete account. Please try again.");
@@ -100,7 +97,7 @@ export default function Settings() {
     }
   };
 
-  if (!userId) return null;
+  if (!authToken) return null;
 
   return (
     <>

@@ -1,5 +1,5 @@
 "use client";
-import { API_URL } from "@/app/lib/api";
+import { API_URL, getToken, apiFetch, clearToken } from "@/app/lib/api";
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -13,11 +13,11 @@ export default function NavBar() {
   const router = useRouter();
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
+    const authToken = getToken();
+    if (authToken) {
       setIsLoggedIn(true);
       // Fetch user name
-      fetch(`${API_URL}/users/${userId}`)
+      apiFetch("/users/me")
         .then((res) => res.json())
         .then((data) => setUserName(`${data.first_name} ${data.last_name}`))
         .catch(() => setUserName("User"));
@@ -25,7 +25,7 @@ export default function NavBar() {
   }, [pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem("userId");
+    clearToken();
     setIsLoggedIn(false);
     setUserName("");
     setMenuOpen(false);

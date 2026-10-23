@@ -1,5 +1,5 @@
 "use client";
-import { API_URL } from "@/app/lib/api";
+import { API_URL, getToken, apiFetch } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
@@ -14,7 +14,7 @@ type Location = {
 };
 
 export default function Browse() {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
   const [savedIds, setSavedIds] = useState<number[]>([]);
@@ -23,8 +23,8 @@ export default function Browse() {
   );
 
   useEffect(() => {
-    const id = localStorage.getItem("userId");
-    setUserId(id);
+    const id = getToken();
+    setAuthToken(id);
 
     // Fetch locations regardless of login status
     fetch(`${API_URL}/locations/`)
@@ -40,11 +40,9 @@ export default function Browse() {
   }, []);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!authToken) return;
 
-    fetch(
-      `${API_URL}/user-locations/${userId}`,
-    )
+    apiFetch("/user-locations/me")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -58,12 +56,11 @@ export default function Browse() {
         console.error("Error fetching saved locations:", err);
         setSavedIds([]);
       });
-  }, [userId]);
+  }, [authToken]);
 
   const handleSave = async (locationId: number) => {
-    if (!userId) return;
-    await fetch(
-      `${API_URL}/user-locations/${userId}/${locationId}`,
+    if (!authToken) return;
+    await apiFetch(`/user-locations/me/${locationId}`,
       {
         method: "POST",
       },
@@ -74,9 +71,8 @@ export default function Browse() {
   };
 
   const handleRemove = async (locationId: number) => {
-    if (!userId) return;
-    await fetch(
-      `${API_URL}/user-locations/${userId}/${locationId}`,
+    if (!authToken) return;
+    await apiFetch(`/user-locations/me/${locationId}`,
       {
         method: "DELETE",
       },
@@ -119,7 +115,7 @@ export default function Browse() {
                       {loc.country}
                     </p>
                   </div>
-                  {userId ? (
+                  {authToken ? (
                     savedIds.includes(loc.id) ? (
                       <button
                         onClick={(e) => {
@@ -226,7 +222,7 @@ export default function Browse() {
                 )}
 
                 <div className="mt-6 flex gap-3">
-                  {userId ? (
+                  {authToken ? (
                     savedIds.includes(selectedLocation.id) ? (
                       <button
                         onClick={() => {
