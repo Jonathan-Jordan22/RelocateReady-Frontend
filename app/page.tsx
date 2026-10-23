@@ -1,6 +1,6 @@
 "use client";
 
-import { getToken } from "./lib/api";
+import { getToken, API_URL } from "./lib/api";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ export default function Home() {
   useEffect(() => {
     const token = getToken();
     setIsLoggedIn(!!token);
+    // Wake the backend early in case it's asleep (free hosting idles when unused)
+    fetch(`${API_URL}/`).catch(() => { });
   }, []);
 
   return (

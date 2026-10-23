@@ -18,9 +18,16 @@ export default function Browse() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
   const [savedIds, setSavedIds] = useState<number[]>([]);
+  const [slowLoad, setSlowLoad] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null,
   );
+
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => setSlowLoad(true), 3000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   useEffect(() => {
     const id = getToken();
@@ -82,7 +89,19 @@ export default function Browse() {
     setSavedIds((prev) => prev.filter((id) => id !== locationId));
   };
 
-  if (loading) return <p className="p-6">Loading locations...</p>;
+  if (loading)
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center gap-3 px-6 text-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
+      <p className="text-gray-700">Loading locations...</p>
+      {slowLoad && (
+        <p className="text-sm text-gray-500 max-w-sm">
+          Waking up the server. It runs on free hosting that sleeps when idle,
+          so the first load can take up to a minute.
+        </p>
+      )}
+    </main>
+  );
 
   return (
     <>
@@ -192,34 +211,34 @@ export default function Browse() {
 
                 {(selectedLocation.cost_index !== undefined ||
                   selectedLocation.safety_index !== undefined) && (
-                  <div className="border-t pt-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      Quick Stats
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {selectedLocation.cost_index !== undefined && (
-                        <div className="bg-indigo-50 rounded-xl p-4">
-                          <p className="text-sm text-gray-600 mb-1">
-                            Cost Index
-                          </p>
-                          <p className="text-2xl font-bold text-indigo-600">
-                            {selectedLocation.cost_index.toFixed(1)}
-                          </p>
-                        </div>
-                      )}
-                      {selectedLocation.safety_index !== undefined && (
-                        <div className="bg-purple-50 rounded-xl p-4">
-                          <p className="text-sm text-gray-600 mb-1">
-                            Safety Index
-                          </p>
-                          <p className="text-2xl font-bold text-purple-600">
-                            {selectedLocation.safety_index.toFixed(1)}
-                          </p>
-                        </div>
-                      )}
+                    <div className="border-t pt-6">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Quick Stats
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        {selectedLocation.cost_index !== undefined && (
+                          <div className="bg-indigo-50 rounded-xl p-4">
+                            <p className="text-sm text-gray-600 mb-1">
+                              Cost Index
+                            </p>
+                            <p className="text-2xl font-bold text-indigo-600">
+                              {selectedLocation.cost_index.toFixed(1)}
+                            </p>
+                          </div>
+                        )}
+                        {selectedLocation.safety_index !== undefined && (
+                          <div className="bg-purple-50 rounded-xl p-4">
+                            <p className="text-sm text-gray-600 mb-1">
+                              Safety Index
+                            </p>
+                            <p className="text-2xl font-bold text-purple-600">
+                              {selectedLocation.safety_index.toFixed(1)}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 <div className="mt-6 flex gap-3">
                   {authToken ? (
