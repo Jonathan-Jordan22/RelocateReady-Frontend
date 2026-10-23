@@ -1,5 +1,5 @@
 "use client";
-import { API_URL } from "@/app/lib/api";
+import { API_URL, getToken, apiFetch } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,7 @@ import NavBar from "../components/NavBar";
 
 export default function Preferences() {
   const router = useRouter();
-  const [userId, setUserId] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [prefs, setPrefs] = useState({
     cost_importance: 0.5,
     safety_importance: 0.5,
@@ -18,15 +18,15 @@ export default function Preferences() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const id = localStorage.getItem("userId");
+    const id = getToken();
     if (!id) {
       router.push("/signup");
       return;
     }
-    setUserId(id);
+    setAuthToken(id);
 
     // Fetch preferences
-    fetch(`${API_URL}/preferences/${id}`)
+    apiFetch("/preferences/me")
       .then((res) => res.json())
       .then((data) => {
         setPrefs({
@@ -50,8 +50,7 @@ export default function Preferences() {
     setSaving(true);
 
     try {
-      await fetch(
-        `${API_URL}/preferences/${userId}`,
+      await apiFetch("/preferences/me",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -65,7 +64,7 @@ export default function Preferences() {
     }
   };
 
-  if (!userId) return null;
+  if (!authToken) return null;
 
   return (
     <>

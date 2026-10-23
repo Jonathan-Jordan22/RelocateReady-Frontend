@@ -1,5 +1,5 @@
 "use client";
-import { API_URL } from "@/app/lib/api";
+import { API_URL, getToken, apiFetch } from "@/app/lib/api";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,40 +16,36 @@ type RankedLocation = {
 
 export default function Dashboard() {
   const router = useRouter();
-  const [userId, setUserId] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [locations, setLocations] = useState<RankedLocation[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasPreferences, setHasPreferences] = useState(false);
 
   useEffect(() => {
-    const id = localStorage.getItem("userId");
+    const id = getToken();
     if (!id) {
       router.push("/signup");
       return;
     }
-    setUserId(id);
+    setAuthToken(id);
   }, [router]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!authToken) return;
 
     setLoading(true);
 
     let savedLocationIds: number[] = [];
 
     // First fetch saved location IDs
-    fetch(
-      `${API_URL}/user-locations/${userId}`,
-    )
+    apiFetch("/user-locations/me")
       .then((res) => res.json())
       .then((savedLocs) => {
         if (Array.isArray(savedLocs)) {
           savedLocationIds = savedLocs.map((loc: any) => loc.id);
         }
         // Then fetch user preferences
-        return fetch(
-          `${API_URL}/preferences/${userId}`,
-        );
+        return apiFetch("/preferences/me")
       })
       .then((res) => {
         if (!res.ok) {
@@ -57,10 +53,7 @@ export default function Dashboard() {
           setHasPreferences(false);
           setLoading(false);
           // Fetch ranked locations anyway
-          return fetch(
-            `${API_URL}/score/user/${userId}/ranked`,
-            { method: "POST" },
-          )
+          return apiFetch("/score/me/ranked", { method: "POST" })
             .then((r) => r.json())
             .then((data) => {
               if (Array.isArray(data)) {
@@ -84,10 +77,7 @@ export default function Dashboard() {
         setHasPreferences(!isDefaultPrefs);
 
         // Then fetch user's ranked locations
-        return fetch(
-          `${API_URL}/score/user/${userId}/ranked`,
-          { method: "POST" },
-        );
+        return apiFetch("/score/me/ranked", { method: "POST" })
       })
       .then((res) => {
         if (!res) return; // Already handled above
@@ -106,9 +96,9 @@ export default function Dashboard() {
         setLocations([]);
         setLoading(false);
       });
-  }, [userId]);
+  }, [authToken]);
 
-  if (!userId) return null;
+  if (!authToken) return null;
 
   return (
     <>

@@ -1,5 +1,5 @@
 "use client";
-import { API_URL } from "@/app/lib/api";
+import { API_URL, saveToken } from "@/app/lib/api";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -60,8 +60,7 @@ export default function Signup() {
 
       const data = await res.json();
 
-      // Store user ID locally
-      localStorage.setItem("userId", data.id);
+      saveToken(data.access_token);
 
       router.push("/dashboard");
     } catch (err) {
